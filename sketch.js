@@ -1,3 +1,6 @@
+var PLAY=1;
+var END=0;
+var gameState=1;
 var path,boy,cash,diamonds,jwellery,sword;
 var pathImg,boyImg,cashImg,diamondsImg,jwelleryImg,swordImg;
 var treasureCollection = 0;
@@ -25,7 +28,7 @@ path.velocityY = 4;
 //creating boy running
 boy = createSprite(70,330,20,20);
 boy.addAnimation("SahilRunning",boyImg);
-boy.scale=0.08;
+boy.scale=0.06;
   
   
 cashG=new Group();
@@ -36,7 +39,7 @@ swordGroup=new Group();
 }
 
 function draw() {
-
+if(gameState===PLAY){
   background(0);
   boy.x = World.mouseX;
   
@@ -52,22 +55,42 @@ function draw() {
     createDiamonds();
     createJwellery();
     createSword();
-
-    if (cashG.isTouching(boy)) {
+if (cashG.isTouching(boy)) {
       cashG.destroyEach();
+      treasureCollection=treasureCollection+50;
     }
     else if (diamondsG.isTouching(boy)) {
       diamondsG.destroyEach();
+      treasureCollection=treasureCollection+100;
       
     }else if(jwelleryG.isTouching(boy)) {
       jwelleryG.destroyEach();
+      treasureCollection= treasureCollection + 150;
       
     }else{
       if(swordGroup.isTouching(boy)) {
+        gameState=END;
+        
+        boy.addAnimation("SahilRunning",endImg);
+        boy.x=200;
+        boy.y=200;
+        boy.scale=0.6;
+        
+        cashG.destroyEach();
+        diamondsG.destroyEach();
+        jwelleryG.destroyEach();
         swordGroup.destroyEach();
+        
+        cashG.setVelocityYEach(0);
+        diamondsG.setVelocityYEach(0);
+        jwelleryG.setVelocityYEach(0);
+        swordGroup.setVelocityYEach(0);
+      
+        path.velocityY=0;
     }
   }
-
+    
+}
   drawSprites();
   textSize(20);
   fill(255);
